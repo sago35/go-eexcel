@@ -118,20 +118,19 @@ func TestUnarshal(t *testing.T) {
 	}
 }
 
-func ExampleEexcel() {
+func ExampleMarshal() {
 	type st struct {
 		Name   string `eexcel:"name"`
 		Number int    `eexcel:"number"`
 	}
 
-	// marshal
 	input := st{
 		Name:   "go-eexcel",
 		Number: 123456,
 	}
 	b, _ := Marshal(input)
 
-	if true {
+	if false {
 		// Save to file
 		ioutil.WriteFile("out.xlsx", b, 0666)
 	}
@@ -142,20 +141,27 @@ func ExampleEexcel() {
 	for _, row := range rows {
 		fmt.Printf("%s\n", strings.Join(row, "	"))
 	}
-	fmt.Printf("\n")
-
-	// unmarshal
-	output := st{}
-	Unmarshal(b, &output)
-
-	fmt.Printf("Name   : %q\n", output.Name)
-	fmt.Printf("Number : %d\n", output.Number)
 
 	// Output:
 	// key	value
 	// name	go-eexcel
 	// number	123456
-	//
-	// Name   : "go-eexcel"
-	// Number : 123456
+}
+
+func ExampleUnmarshal() {
+	type testStruct struct {
+		A string `eexcel:"AAA"`
+		B int    `eexcel:"BBB"`
+	}
+	output := testStruct{}
+
+	b, _ := ioutil.ReadFile("testdata/test.xlsx")
+	Unmarshal(b, &output)
+
+	fmt.Printf("A : %q\n", output.A)
+	fmt.Printf("B : %d\n", output.B)
+
+	// Output:
+	// A : "aaa"
+	// B : 222
 }
